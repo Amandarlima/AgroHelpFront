@@ -1,50 +1,103 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "../../supabaseClient";
+import { createClient } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 
-export default function Dashboard() {
-  const router = useRouter();
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const getUser = async () => {
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data.user) {
-        router.push("/login");
-      } else {
-        setUser(data.user);
-      }
-    };
-    getUser();
-  }, []);
-
-  const logout = async () => {
+<button
+  onClick={async () => {
     await supabase.auth.signOut();
     router.push("/login");
+  }}
+  className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+>
+  Sair
+</button>
+
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+);
+
+export default function Dashboard() {
+  const [calls, setCalls] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    fetchCalls();
+  }, []);
+
+  const fetchCalls = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from("calls")
+      .select("*")
+      .order("timestamp", { ascending: false });
+
+    if (error) {
+      console.error("Erro ao buscar chamadas:", error);
+    } else {
+      setCalls(data);
+    }
+    setLoading(false);
   };
 
-  if (!user) return <p>Carregando...</p>;
+  const deleteCall = async (id) => {
+    const { error } = await supabase.from("calls").delete().eq("id", id);
+    if (error) {
+      console.error("Erro ao deletar:", error);
+    } else {
+      fetchCalls();
+    }
+  };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-green-50">
-      <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-      <p>Bem-vindo, {user.email}</p>
-      <div className="flex gap-4 mt-6">
-        <a
-          href="/call"
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Iniciar Videochamada
-        </a>
-        <button
-          onClick={logout}
-          className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
-        >
-          Sair
-        </button>
-      </div>
+    <div className="min-h-screen bg-green-50 p-8">
+      <h1 className="text-3xl font-bold mb-6 text-green-800">
+        📜 Histórico de Chamadas
+      </h1>
+
+      {loading ? (
+        <p>🔄 Carregando...</p>
+      ) : calls.length === 0 ? (
+        <p>❌ Nenhuma chamada encontrada.</p>
+      ) : (
+        <table className="w-full bg-white rounded shadow">
+          <thead>
+            <tr className="bg-green-100">
+              <th className="p-2">Sala</th>
+              <th className="p-2">Data/Hora</th>
+              <th className="p-2">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {calls.map((call) => (
+              <tr key={call.id} className="border-t">
+                <td className="p-2">{call.room}</td>
+                <td className="p-2">
+                  {new Date(call.timestamp).toLocaleString("pt-BR")}
+                </td>
+                <td className="p-2 flex gap-2">
+                  <button
+                    onClick={() => router.push(`/call/${call.room}`)}
+                    className="bg-blue-600 text-white px-2 py-1 rounded hover:bg-blue-700"
+                  >
+                    🔗 Entrar
+                  </button>
+                  <button
+                    onClick={() => deleteCall(call.id)}
+                    className="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700"
+                  >
+                    🗑️ Deletar
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
