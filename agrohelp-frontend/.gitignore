@@ -39,3 +39,41 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+ 
+ # cache
+.nyc_output
+.cache/
+.next/
+out/
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# sistema
+.DS_Store
+
+# lockfiles (opcional, se não quiser versionar)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# arquivos de áudio/imagens temporários
+*.mp3
+*.webp
+
+# Next.js cache e build extra
+.next/
+out/
+*.pack.gz
+*.log
+
+# VSCode e sistema
+.vscode/
+*.swp
+
+*.gz
+
+node_modules/
+.next/
