@@ -1,0 +1,79 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+ 
+ # cache
+.nyc_output
+.cache/
+.next/
+out/
+*.log
+
+# IDEs
+.vscode/
+.idea/
+
+# sistema
+.DS_Store
+
+# lockfiles (opcional, se não quiser versionar)
+package-lock.json
+pnpm-lock.yaml
+yarn.lock
+
+# arquivos de áudio/imagens temporários
+*.mp3
+*.webp
+
+# Next.js cache e build extra
+.next/
+out/
+*.pack.gz
+*.log
+
+# VSCode e sistema
+.vscode/
+*.swp
+
+*.gz
+
+node_modules/
+.next/
