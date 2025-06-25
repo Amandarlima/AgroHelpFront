@@ -66,10 +66,3 @@ http://localhost:3000
 ## Versão online
 
 [Plataforma AgroHelp - Deploy Render](https://agrohelpfront-yx9h.onrender.com/login)
-
-##  Público-alvo
-
-- Pequenos e médios produtores rurais
-- Agrônomos especializados
-- Cooperativas agrícolas
-
